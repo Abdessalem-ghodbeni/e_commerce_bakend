@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userShcema = mongoose.Schema(
   {
@@ -38,6 +39,16 @@ const userShcema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+//cryptage de password lors d'ajout in data base
+userShcema.pre("save", async function () {
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+//comparer password plainPassword=clair password avec password haché
+userShcema.methods.comparePassword = async function (plainPassword) {
+  return await bcrypt.compare(plainPassword, this.password);
+};
 
 const userModel = mongoose.model("Users", userShcema);
 export default userModel;
