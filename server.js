@@ -1,35 +1,20 @@
-import  Express from "express";
-import dotenv from "dotenv"
-import colors from "colors"
+import Express from "express";
+import dotenv from "dotenv";
+import colors from "colors";
 import morgan from "morgan";
-import cors from "cors"
-import conncetDb from "./config/db.js"
-const app=Express()
-app.use(morgan("dev"))
-app.use(cors())
-app.use(Express.json())
- 
-
-
-dotenv.config()
-
-
+import cors from "cors";
+import conncetDb from "./config/db.js";
+import userRoutes from "./routes/userRoutes.js";
+const app = Express();
+dotenv.config();
+const port = process.env.PORT || 5000;
 //connection ave la base de donnée
 conncetDb();
+app.use(morgan("dev"));
+app.use(cors());
+app.use(Express.json());
+app.use("/user", userRoutes);
 
-
-
-
-
-const port=process.env.PORT || 5000;
-
-
-
-
-
-
-
-
-app.listen(port,()=>{
-    console.log(`server runing in port ${process.env.PORT}`.bgMagenta.white)
-})
+app.listen(port, () => {
+  console.log(`server runing in port ${process.env.PORT}`.bgMagenta.white);
+});
