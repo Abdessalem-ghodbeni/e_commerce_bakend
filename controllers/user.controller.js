@@ -120,3 +120,52 @@ export const getUserProfileController = async (req, res) => {
     });
   }
 };
+
+export const logoutController = async (req, res) => {
+  try {
+    res
+      .status(200)
+      .cookie("token", "", {
+        expires: new Date(Date.now()),
+        secure: process.env.NODE_ENV === "development" ? true : false,
+        httpOnly: process.env.NODE_ENV === "development" ? true : false,
+        sameSite: process.env.NODE_ENV === "development" ? true : false,
+      })
+      .send({
+        success: true,
+        message: "Logout SUccessfully",
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error In LOgout API",
+      error,
+    });
+  }
+};
+
+export const updateInfoUserController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+    const { name, email, adress, city, country, phone } = req.body;
+    //user.name correspond au nom actuellement stocké dans la base de données pour cet utilisateur. Et name correspond au nom extrait du corps de la requête (req.body). Lorsque vous exécutez if (name) user.name = name;, cela vérifie si name est une valeur non nulle ou non définie. Si name a une valeur, cela signifie qu'un nouveau nom a été fourni dans la requête et vous souhaitez mettre à jour le nom de l'utilisateur. Si name existe dans le corps de la requête, la ligne de code user.name = name; affecte la valeur de name à la propriété name de l'objet user.
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (adress) user.adress = adress;
+    if (city) user.city = city;
+    if (country) user.country = country;
+    if (phone) user.phone = phone;
+
+    await user.save();
+    res.status(200).send({
+      succes: true,
+      message: "user updated successfully",
+    });
+  } catch (error) {
+    res.status(500).send({
+      succes: false,
+      message: "somthing was warrning in update info",
+    });
+  }
+};

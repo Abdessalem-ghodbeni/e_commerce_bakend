@@ -17,10 +17,9 @@ conncetDb();
 app.use(morgan("dev"));
 app.use(cors());
 app.use(Express.json());
-
 app.use(cookieParser());
-app.use(isAuth);
 app.use("/user", userRoutes);
+app.use(isAuth);
 
 app.listen(port, () => {
   console.log(

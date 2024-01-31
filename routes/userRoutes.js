@@ -3,6 +3,8 @@ import {
   RegisterController,
   getUserProfileController,
   logginController,
+  logoutController,
+  updateInfoUserController,
 } from "../controllers/user.controller.js";
 import { isAuth } from "../middleware/auth.middleware.js";
 
@@ -14,6 +16,8 @@ const router = express.Router();
 router.post("/register", RegisterController);
 router.post("/login", logginController);
 router.get("/profile", isAuth, getUserProfileController);
+router.get("/logout", isAuth, logoutController);
+router.put("/update", isAuth, updateInfoUserController);
 
 //exportation
 export default router;
