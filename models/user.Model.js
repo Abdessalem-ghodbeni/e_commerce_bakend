@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import JWT from "jsonwebtoken";
 
 const userShcema = mongoose.Schema(
   {
@@ -48,6 +49,14 @@ userShcema.pre("save", async function () {
 //comparer password plainPassword=clair password avec password haché
 userShcema.methods.comparePassword = async function (plainPassword) {
   return await bcrypt.compare(plainPassword, this.password);
+};
+
+//genration d'un tocken
+userShcema.methods.generateToken = function () {
+  return JWT.sign({ _id: this._id }, process.env.JWT_SECRET, {
+    //Le token généré sera valide pendant 7 jours.
+    expiresIn: "7d",
+  });
 };
 
 const userModel = mongoose.model("Users", userShcema);

@@ -79,15 +79,44 @@ export const logginController = async (req, res) => {
         message: "password is not true ",
       });
     }
-    res.status(200).send({
-      succes: true,
-      message: "Loggin successfuly",
-      existingUser,
-    });
+    const token = existingUser.generateToken();
+    res
+      .status(200)
+      .cookie("token", token, {
+        expires: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+        secure: process.env.MODE_ENV === "developpement" ? true : false,
+        httpOnly: process.env.MODE_ENV === "developpement" ? true : false,
+        sameSite: process.env.MODE_ENV === "developpement" ? true : false,
+      })
+      .send({
+        succes: true,
+        message: "Loggin successfuly",
+        token,
+        existingUser,
+      });
   } catch (error) {
     res.status(500).send({
       succes: false,
       message: `somthing was warrning in loggin ${error}`,
+    });
+  }
+};
+
+export const getUserProfileController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+    user.password = undefined;
+    res.status(200).send({
+      success: true,
+      message: "USer Prfolie Fetched Successfully",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error In PRofile API",
+      error,
     });
   }
 };
