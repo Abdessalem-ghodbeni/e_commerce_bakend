@@ -42,7 +42,11 @@ const userShcema = mongoose.Schema(
 );
 
 //cryptage de password lors d'ajout in data base
-userShcema.pre("save", async function () {
+userShcema.pre("save", async function (next) {
+  // pour dire si le password n'est pas modifier ne le hacher de nouveaux si non faire le hachage
+  // methos isModified est fournie par mongoose
+  if (!this.isModified("password")) return next();
+
   this.password = await bcrypt.hash(this.password, 10);
 });
 

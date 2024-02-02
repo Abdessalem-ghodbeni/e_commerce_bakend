@@ -169,3 +169,39 @@ export const updateInfoUserController = async (req, res) => {
     });
   }
 };
+
+export const UpdatePasswordUserController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user._id);
+    const { oldPassword, newPassword } = req.body;
+    //verifier que les champs sont bien saisie
+    if (!oldPassword || !newPassword) {
+      return res.status(500).send({
+        succes: false,
+        message: "champs is required",
+      });
+    }
+
+    //verification old password is true
+    const isMatch = await user.comparePassword(oldPassword);
+    if (!isMatch) {
+      return res.status(500).send({
+        succes: false,
+        message: "old password is not true ",
+      });
+    }
+
+    user.password = newPassword;
+    await user.save();
+    res.status(200).send({
+      succes: true,
+      message: "user password is successfully updated",
+    });
+  } catch (error) {
+    res.status(500).send({
+      succes: false,
+      message: "error in update password",
+      error,
+    });
+  }
+};

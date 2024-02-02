@@ -1,6 +1,7 @@
 import express from "express";
 import {
   RegisterController,
+  UpdatePasswordUserController,
   getUserProfileController,
   logginController,
   logoutController,
@@ -18,6 +19,7 @@ router.post("/login", logginController);
 router.get("/profile", isAuth, getUserProfileController);
 router.get("/logout", isAuth, logoutController);
 router.put("/update", isAuth, updateInfoUserController);
+router.put("/update_password", isAuth, UpdatePasswordUserController);
 
 //exportation
 export default router;
