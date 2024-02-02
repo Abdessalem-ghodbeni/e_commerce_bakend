@@ -7,7 +7,7 @@ const categorySchema = mongoose.Schema(
       required: [true, "category is required"],
     },
   },
-  { timestamps }
+  { timestamps: true }
 );
 
 const categoryModel = mongoose.model("Categorys", categorySchema);

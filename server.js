@@ -4,7 +4,9 @@ import colors from "colors";
 import morgan from "morgan";
 import cors from "cors";
 import conncetDb from "./config/db.js";
-import userRoutes from "./routes/userRoutes.js";
+
+import userRoutes from "./routes/user.routes.js";
+import productRoutes from "./routes/product.routes.js";
 
 import cookieParser from "cookie-parser";
 import { isAuth } from "./middleware/auth.middleware.js";
@@ -26,6 +28,7 @@ app.use(cors());
 app.use(Express.json());
 app.use(cookieParser());
 app.use("/user", userRoutes);
+app.use("/product", productRoutes);
 app.use(isAuth);
 
 app.listen(port, () => {
